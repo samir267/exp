@@ -1,7 +1,16 @@
 const express= require('express');
 const auth =require("./routes/auth.js")
+const post=require("./routes/post.js")
 const productRoute=require("./routes/products.js")
 const bodyParser=require("body-parser")
+const mongoose=require('mongoose')
+const dotenv=require('dotenv')
+dotenv.config()
+const MONGODB_URI=process.env.MONGODB_URI
+const PORT=process.env.PORT || 5000
+
+const voiture=require('./routes/voiture.js')
+
 //creation of the  server instance   
 const app=express()
 
@@ -44,15 +53,23 @@ app.use("/auth",auth);
 
 app.use("/product",productRoute);
 
+app.use("/voiture",voiture)
+
+app.use("/posts",post)
 
 //racine route donc lazem lokhrin kbalha tnajem tssir error ki tebda plusieurs get
 app.get('/',(req,res)=>{
     res.send("Welcome to our home route")
 })
 
+//mongoose
+
+mongoose.connect(MONGODB_URI).then(()=>{
 
 // creation of the server instance 
-app.listen(4000,()=>{
-    console.log("Server is running on port 4000");
+app.listen(PORT,()=>{
+    console.log("Server is running on port 9000");
 })
-
+}).catch(err=>{
+    console.log(err);
+})
